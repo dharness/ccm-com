@@ -18,6 +18,9 @@ const passport = configureStrategies();
 app.use(passport.initialize());
 app.use('/accounts', accountController);
 
+app.get('/', (req, res) => {
+  res.send({ status: 200 })
+});
 
 const start = async () => {
   await connectDb();
