@@ -1,12 +1,17 @@
-const SlackBroker = require('./SlackBroker');
-const ChindowBroker = require('./ChindowBroker');
-
-
 module.exports = {
-  init(io, botTokens) {
-    const chindowBroker = new ChindowBroker(io);
-    const slackBrokers = botTokens.map((botToken) => {
-      return new SlackBroker({ botToken });
+
+  init(io) {
+    io.on('connection', this.handleConnection.bind(this));
+  },
+
+  handleConnection(socket) {
+
+    socket.on('MESSAGE', msg => {
+      socket.broadcast.emit('MESSAGE', msg.split('').reverse().join(''));
     });
+  },
+
+  handleMessage(data) {
+    console.log(data);
   }
 };

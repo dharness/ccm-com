@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-const connect = async () => {
+const connect = async (DB_URL) => {
   mongoose.set('debug', false);
-  return mongoose.connect(process.env.MONGO_URL);
+  return mongoose.connect(DB_URL || process.env.MONGO_URL);
 }
 
 module.exports = { connect };
