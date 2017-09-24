@@ -19,13 +19,13 @@ app.use(passport.initialize());
 app.use('/accounts', accountController);
 
 app.get('/', (req, res) => {
-  res.send({ status: 200 })
+  res.send({ status: 300 })
 });
 
 const start = async () => {
   await connectDb();
   server.listen(PORT, () => {
-    console.log(`COM-SERVER listening atll http://localhost:${PORT}`)
+    console.log(`COM-SERVER listening at http://localhost:${PORT}`)
   });
 }
 
