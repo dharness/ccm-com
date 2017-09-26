@@ -4,9 +4,12 @@ const bodyParser = require('body-parser')
 const PORT = process.env.PORT || 9091;
 const server = require('http').Server(app);
 const messaging = require('./messaging');
-const connectDb = require('./services/connections').connect;
 const accountController= require('./routes/accounts');
 const { configureStrategies } = require('./config/passport');
+const {
+  connect: connectDb,
+  disconnect: disconnectDb,
+} = require('./services/connections');
 
 
 messaging.init(server);
@@ -32,8 +35,13 @@ const start = async (_PORT=PORT, DB_URL) => {
   });
 }
 
+const stop = async () => {
+  server.close()
+  return disconnectDb();
+}
+
 if (require.main === module) {
   start();
 }
 
-module.exports = { start };
+module.exports = { start, stop };

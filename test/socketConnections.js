@@ -1,4 +1,4 @@
-const { start } = require('./../server.js')
+const { start, stop } = require('./../server.js')
 const WebSocket = require('ws')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -36,12 +36,10 @@ describe('socket connections', () => {
       createAccount({ username: 'some_username' }).then(_token => {
         token = _token;
         MongoClient.connect(TEST_DB_URL, (err, _db) => {
+          if(err) { return console.log(err); }
           db = _db
-          db.collection('accounts').drop(() => done())
+          done();
         })
-      }).catch(err => {
-        console.log(err)
-        done();
       })
     })
   })
@@ -49,7 +47,7 @@ describe('socket connections', () => {
   after(done => {
     db.collection('accounts').drop((err, success) => {
       db.close()
-      done()
+      stop().then(_ => done());
     })
   })
 

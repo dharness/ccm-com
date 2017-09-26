@@ -1,4 +1,4 @@
-const { start } = require('./../server.js')
+const { start, stop } = require('./../server.js')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const io = require('socket.io-client')
@@ -25,7 +25,7 @@ describe('/accounts', () => {
   after(done => {
     db.collection('accounts').drop((err, success) => {
       db.close()
-      done()
+      stop().then(_ => done());
     })
   })
 

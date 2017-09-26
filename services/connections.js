@@ -8,4 +8,10 @@ const connect = async (DB_URL) => {
   return mongoose.connect(DB_URL || process.env.MONGO_URL);
 }
 
-module.exports = { connect };
+const disconnect = async () => {
+  return new Promise((resolve, reject) => {
+    mongoose.connection.close(_ => resolve());
+  })
+}
+
+module.exports = { connect, disconnect };

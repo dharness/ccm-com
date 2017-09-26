@@ -1,4 +1,4 @@
-const { start } = require('./../server.js')
+const { start, stop } = require('./../server.js')
 const WebSocket = require('ws')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -58,7 +58,7 @@ describe('socket messages', () => {
   after(done => {
     db.collection('accounts').drop((err, success) => {
       db.close()
-      done()
+      stop().then(_ => done())
     })
   })
 
