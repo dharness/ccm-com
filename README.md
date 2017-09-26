@@ -1,5 +1,7 @@
 ## Clam City Messenger Communication Server
 
+![](https://travis-ci.org/dharness/ccm-com.svg?branch=master)
+
 ### API
 
 #### Login
