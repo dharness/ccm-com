@@ -7,9 +7,11 @@
 Responds with a JWT if login is successful
 
 ``` javascript
+/*
 POST http://138.197.151.119/accounts/signup
 type=application/json
-// body
+body:
+*/
 {
   "username": String,
   "password": String,
@@ -22,9 +24,11 @@ type=application/json
 Responds with a JWT if login is successful
 
 ``` javascript
+/*
 POST http://138.197.151.119/accounts/login
 type=application/json
-// body
+body:
+*/
 {
   "username": String,
   "password": String,
