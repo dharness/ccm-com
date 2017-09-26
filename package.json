@@ -19,6 +19,7 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.17.2",
     "chai": "4.1.2",
+    "chai-spies": "0.7.1",
     "chart.js": "2.5.0",
     "connect-redis": "3.3.0",
     "css-loader": "0.28.1",
@@ -43,12 +44,14 @@
     "passport-local": "1.0.0",
     "preact": "8.1.0",
     "prop-types": "15.5.10",
+    "protobufjs": "6.8.0",
     "react": "15.5.4",
     "react-chat-window": "1.0.5",
     "react-dom": "15.5.4",
     "redis": "2.7.1",
     "socket.io": "2.0.1",
     "socket.io-client": "2.0.3",
+    "socketio-jwt": "4.5.0",
     "stripe": "4.19.1",
     "style-loader": "0.17.0",
     "styled-components": "1.4.6",
@@ -57,7 +60,8 @@
     "url-loader": "0.5.8",
     "wdt-emoji-bundle": "0.2.0",
     "webpack": "2.5.1",
-    "winston": "2.3.1"
+    "winston": "2.3.1",
+    "ws": "3.2.0"
   },
   "devDependencies": {
     "babel-eslint": "6.1.2",

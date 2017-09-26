@@ -13,16 +13,21 @@ chai.use(chaiHttp)
 describe('/accounts', () => {
   var db
 
-  before((done) => {
+  before(done => {
     start(TEST_PORT, TEST_DB_URL).then(() => {
       MongoClient.connect(TEST_DB_URL, (err, _db) => {
         db = _db
-        done()
+        db.collection('accounts').drop(() => done())
       })
     })
   })
 
-  after(() => db.close())
+  after(done => {
+    db.collection('accounts').drop((err, success) => {
+      db.close()
+      done()
+    })
+  })
 
   it('should not contain any accounts', (done) => {
     db.collection('accounts').find({}).toArray((err, docs) => {
