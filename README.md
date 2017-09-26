@@ -52,7 +52,7 @@ const options = {
   }
 };
 const client = new WebSocket(SOCKET_URL, options);
-client.send(messageToSend);
+client.send(JSON.stringify(messageToSend));
 
 client.onmessage = event => {
   console.log(JSON.parse(event.data));
@@ -72,5 +72,5 @@ const messageToSend = {
   }  
 }
 
-client.send(messageToSend);
+client.send(JSON.stringify(messageToSend));
 ```
