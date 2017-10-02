@@ -179,8 +179,8 @@ describe('/accounts', () => {
 
     after(done => {
       db.collection('accounts').drop((err, success) => {
-        db.close()
-        stop().then(_ => done())
+        if (err) throw err
+        done()
       })
     })
 
@@ -232,7 +232,7 @@ describe('/accounts', () => {
     })
   })
 
-  describe.only('accounts.delete', () => {
+  describe('accounts.delete', () => {
     let token;
 
     beforeEach(done => {

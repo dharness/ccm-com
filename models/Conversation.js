@@ -7,21 +7,6 @@ const conversationSchema = new Schema({
   members: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account'
-  }],
-  messages: [{
-    timestamp_sent: Date,
-    timestamp_read: Date,
-    to: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Account'
-    },
-    from: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Account'
-    },
-    body: {
-      text: String
-    }
   }]
 }, {
   versionKey: false
