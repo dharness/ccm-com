@@ -9,13 +9,13 @@ chai.use(spies);
 
 const TEST_PORT = 9092
 const SOCKET_URL = `ws://localhost:${TEST_PORT}`
-const SERVER_URL = `http://localhost:${TEST_PORT}`
+const API_URL = `http://localhost:${TEST_PORT}/api`
 const TEST_DB_URL = process.env.MONGO_URL_TEST
 
 function createAccount ({ username }) {
   return new Promise((resolve, reject) => {
-    chai.request(SERVER_URL)
-      .post('/accounts/signup')
+    chai.request(API_URL)
+      .post('/accounts.create')
       .type('application/json')
       .send({
         username,

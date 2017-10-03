@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const PORT = process.env.PORT || 9091;
 const server = require('http').Server(app);
 const messaging = require('./messaging');
-const accountController= require('./routes/accounts');
+const api = require('./api');
 const { configureStrategies } = require('./config/passport');
 const {
   connect: connectDb,
@@ -21,7 +21,7 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 const passport = configureStrategies();
 app.use(passport.initialize());
-app.use('/accounts', accountController);
+app.use('/api', api);
 
 
 app.get('/', (req, res) => {

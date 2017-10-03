@@ -3,6 +3,7 @@ const LocalStrategy = require('passport-local').Strategy
 const Account = require('./../models/Account')
 const jwt = require('jsonwebtoken')
 const jwtConfig = require('./jwt')
+const passportJWT = require('passport-jwt')
 
 function configureStrategies () {
   passport.serializeUser((account, done) => {
@@ -63,6 +64,20 @@ function configureStrategies () {
           return done(null, account, req)
         })
       }))
+
+  var jwtOptions = {
+    jwtFromRequest: passportJWT.ExtractJwt.fromHeader('token'),
+    secretOrKey: jwtConfig.secretKey
+  }
+  passport.use('jwt-auth', new passportJWT.Strategy(jwtOptions, (jwt_payload, next) => {
+    const { username } = jwt_payload;
+
+    Account.findOne({ username }, (err, account) => {
+      if (err) { return next(err, false) }
+      if (!account) { return next(404, false) }
+      return next(null, account)
+    });
+  }))
   return passport
 }
 
