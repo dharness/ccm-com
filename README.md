@@ -10,7 +10,7 @@ Responds with a JWT if login is successful
 
 ``` javascript
 /*
-POST http://138.197.151.119/accounts.create
+POST http://138.197.151.119/account.create
 type=application/json
 body:
 */
@@ -27,7 +27,7 @@ Responds with a JWT if login is successful
 
 ``` javascript
 /*
-POST http://138.197.151.119/accounts.login
+POST http://138.197.151.119/account.login
 type=application/json
 body:
 */

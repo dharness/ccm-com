@@ -4,7 +4,7 @@ const Account = require('./../models/Account')
 
 const router = express.Router()
 
-router.post('/accounts.create', (req, res, next) => {
+router.post('/account.create', (req, res, next) => {
   passport.authenticate('local-signup', (err, user, info) => {
     if (err) { return res.status(err.status).send(err.message); }
 
@@ -12,7 +12,7 @@ router.post('/accounts.create', (req, res, next) => {
   })(req, res, next)
 })
 
-router.post('/accounts.login', passport.authenticate('local-login', { session: false }), (req, res) => {
+router.post('/account.login', passport.authenticate('local-login', { session: false }), (req, res) => {
   res.send({ token: req.token })
 })
 

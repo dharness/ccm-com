@@ -38,7 +38,7 @@ describe('/accounts', () => {
     })
   })
 
-  describe('accounts.create', () => {
+  describe('account.create', () => {
 
     afterEach((done) => {
       db.collection('accounts').drop(function (err, success) {
@@ -49,7 +49,7 @@ describe('/accounts', () => {
 
     it('should create a new account', (done) => {
       chai.request(API_URL)
-        .post('/accounts.create')
+        .post('/account.create')
         .type('application/json')
         .send({
           username: 'newuser',
@@ -75,7 +75,7 @@ describe('/accounts', () => {
       }, (err, { result }) => {
         expect(result.ok).to.equal(1)
         chai.request(API_URL)
-          .post('/accounts.create')
+          .post('/account.create')
           .type('application/json')
           .send({
             username: 'newuser',
@@ -99,7 +99,7 @@ describe('/accounts', () => {
   describe('/login', () => {
     before(done => {
       chai.request(API_URL)
-        .post('/accounts.create')
+        .post('/account.create')
         .type('application/json')
         .send({
           username: 'newuser',
@@ -120,7 +120,7 @@ describe('/accounts', () => {
 
     it('should return a token with valid login', (done) => {
       chai.request(API_URL)
-        .post('/accounts.login')
+        .post('/account.login')
         .type('application/json')
         .send({
           username: 'newuser',
@@ -136,7 +136,7 @@ describe('/accounts', () => {
 
     it('should reject invalid username login', (done) => {
       chai.request(API_URL)
-        .post('/accounts.login')
+        .post('/account.login')
         .type('application/json')
         .send({
           username: 'badusername',
@@ -151,7 +151,7 @@ describe('/accounts', () => {
 
     it('should reject invalid password login', (done) => {
       chai.request(API_URL)
-        .post('/accounts.login')
+        .post('/account.login')
         .type('application/json')
         .send({
           username: 'newuser',
@@ -170,7 +170,7 @@ describe('/accounts', () => {
 
     before(done => {
       chai.request(API_URL)
-        .post('/accounts.create')
+        .post('/account.create')
         .type('application/json')
         .send({
           username: 'user1',
@@ -263,7 +263,7 @@ describe('/accounts', () => {
 
     beforeEach(done => {
       chai.request(API_URL)
-        .post('/accounts.create')
+        .post('/account.create')
         .type('application/json')
         .send({
           username: 'user1',
@@ -337,7 +337,7 @@ describe('/accounts', () => {
 
     it('should not remove the account if the token belongs to another user', done => {
       chai.request(API_URL)
-      .post('/accounts.create')
+      .post('/account.create')
       .type('application/json')
       .send({
         username: 'user2',
