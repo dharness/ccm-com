@@ -166,15 +166,26 @@ describe('/accounts', () => {
   })
 
   describe('accounts.search', () => {
+    var token;
 
     before(done => {
-      db.collection('accounts').insertMany([
-        { username: 'user1' },
-        { username: 'user2' }
-      ], (err, res) => {
-        expect(err).to.be.null
-        done()
-      })
+      chai.request(API_URL)
+        .post('/accounts.create')
+        .type('application/json')
+        .send({
+          username: 'user1',
+          password: 'password'
+        })
+        .end((err, res) => {
+          expect(err).to.be.null
+          token = res.body.token;
+          db.collection('accounts').insertMany([
+            { username: 'user2' }
+          ], (err, res) => {
+            expect(err).to.be.null
+            done()
+          })
+        })
     })
 
     after(done => {
@@ -188,6 +199,7 @@ describe('/accounts', () => {
       chai.request(API_URL)
         .post('/account.search')
         .type('application/json')
+        .set('token', token)
         .send({})
         .end((err, res) => {
           expect(err).to.be.null
@@ -201,6 +213,7 @@ describe('/accounts', () => {
     it('should return an array containing matching accounts by username', (done) => {
       chai.request(API_URL)
         .post('/account.search')
+        .set('token', token)
         .type('application/json')
         .send({
           username: 'er1'
@@ -218,6 +231,7 @@ describe('/accounts', () => {
     it('should return an empty array if no matches found', (done) => {
       chai.request(API_URL)
         .post('/account.search')
+        .set('token', token)
         .type('application/json')
         .send({
           username: 'notaname'
@@ -227,6 +241,18 @@ describe('/accounts', () => {
           expect(res).to.have.status(200)
           expect(res.body.accounts).to.be.an('array')
           expect(res.body.accounts.length).to.equal(0)
+          done();
+        })
+    })
+
+    it('should return 401 unauthorized if no token is present', (done) => {
+      chai.request(API_URL)
+        .post('/account.search')
+        .type('application/json')
+        .send({})
+        .end((err, res) => {
+          expect(err).not.to.be.null
+          expect(res).to.have.status(401)
           done();
         })
     })

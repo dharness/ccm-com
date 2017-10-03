@@ -37,6 +37,21 @@ body:
 }
 ```
 
+#### Search
+
+Responds with a list of accounts matching the search criteria
+
+``` javascript
+/*
+POST http://138.197.151.119/accounts.search
+type=application/json
+body:
+*/
+{
+  "username": String
+}
+```
+
 ### Messaging
 
 ccm-com runs a websocket server which relays messages. To send a message you
