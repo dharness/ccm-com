@@ -22,5 +22,5 @@ conversationSchema.method('toClient', function() {
   return obj;
 });
 
-const Conversation = mongoose.model('Account', conversationSchema);
+const Conversation = mongoose.model('Conversation', conversationSchema);
 module.exports = Conversation;

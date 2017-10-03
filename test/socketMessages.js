@@ -15,7 +15,7 @@ const TEST_DB_URL = process.env.MONGO_URL_TEST
 function createAccount ({ username }) {
   return new Promise((resolve, reject) => {
     chai.request(API_URL)
-      .post('/accounts/signup')
+      .post('/accounts.create')
       .type('application/json')
       .send({
         username,

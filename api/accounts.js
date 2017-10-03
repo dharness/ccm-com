@@ -4,7 +4,7 @@ const Account = require('./../models/Account')
 
 const router = express.Router()
 
-router.post('/accounts/signup', (req, res, next) => {
+router.post('/accounts.create', (req, res, next) => {
   passport.authenticate('local-signup', (err, user, info) => {
     if (err) { return res.status(err.status).send(err.message); }
 
@@ -12,11 +12,11 @@ router.post('/accounts/signup', (req, res, next) => {
   })(req, res, next)
 })
 
-router.post('/accounts/login', passport.authenticate('local-login', { session: false }), (req, res) => {
+router.post('/accounts.login', passport.authenticate('local-login', { session: false }), (req, res) => {
   res.send({ token: req.token })
 })
 
-router.post('/account.search', (req, res) => {
+router.post('/account.search', passport.authenticate('jwt-auth', { session: false }), (req, res) => {
   const { username } = req.body
   const q = (username ? {
     username: {
@@ -33,7 +33,7 @@ router.post('/account.search', (req, res) => {
   })
 })
 
-router.post('/account.info', (req, res) => {
+router.post('/account.info', passport.authenticate('jwt-auth', { session: false }), (req, res) => {
   const { username } = req.body
   Account.findOne({ username}, (err, account) => {
     if (err) { return res.send(500); }
