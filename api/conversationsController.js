@@ -14,7 +14,8 @@ const createConversations = (newAccountId, accounts) => {
           const query = { key }
           const update = { members, key }
           const options = { upsert: true, new: true };
-          const p = Conversation.update(query, update, options).catch(err => {
+          const conversation = new Conversation({ members, key })
+          const p = conversation.save().catch(err => {
             if (err.code !== 11000) {
               throw err;
             }

@@ -55,19 +55,20 @@ describe('/accounts', () => {
     })
   })
 
-  describe.only('account.create', () => {
+  describe('account.create', () => {
 
-    afterEach((done) => {
-      db.collection('accounts').drop((err, success) => {
+    afterEach(done => {
+      db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
-        db.collection('conversations').drop((err, success) => {
+
+        db.collection('conversations').remove({}, (err, success) => {
           if (err) throw err
           done()
         })
       })
     })
 
-    it('should create a new account', (done) => {
+    it('should create a new account', done => {
       chai.request(API_URL)
         .post('/account.create')
         .type('application/json')
@@ -82,7 +83,25 @@ describe('/accounts', () => {
           db.collection('accounts').find({}).toArray((err, docs) => {
             expect(docs.length).to.equal(1)
             expect(docs[0].username).to.equal('newuser')
-            expect(docs[0].username).to.equal('newuser')
+            done()
+          })
+        })
+    })
+
+    it('should not create conversations when only a single account is created', done => {
+      chai.request(API_URL)
+        .post('/account.create')
+        .type('application/json')
+        .send({
+          username: 'newuser',
+          password: 'password'
+        })
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body.token).to.be.a('string')
+          db.collection('conversations').find({}).toArray((err, docs) => {
+            expect(docs.length).to.equal(0)
             done()
           })
         })
@@ -125,12 +144,11 @@ describe('/accounts', () => {
       })
     })
 
-    it.only('should create n choose 2 conversations', (done) => {
+    it('should create n choose 2 conversations', (done) => {
       const n = 6;
       const nChoose2 = 15;
       _createUsers(n).then(responses => {
         db.collection('conversations').find({}).toArray((err, docs) => {
-          console.log(docs.map(d => d.members.join('<=>')))
           expect(docs.length).to.equal(nChoose2)
           expect(docs[0].members.length).to.equal(2)
           done()
