@@ -36,13 +36,13 @@ describe('/accounts', () => {
     start(TEST_PORT, TEST_DB_URL).then(() => {
       MongoClient.connect(TEST_DB_URL, (err, _db) => {
         db = _db
-        db.collection('accounts').drop(() => done())
+        db.collection('accounts').remove({}, () => done())
       })
     })
   })
 
   after(done => {
-    db.collection('accounts').drop((err, success) => {
+    db.collection('accounts').remove({}, (err, success) => {
       db.close()
       stop().then(_ => done())
     })
@@ -60,7 +60,6 @@ describe('/accounts', () => {
     afterEach(done => {
       db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
-
         db.collection('conversations').remove({}, (err, success) => {
           if (err) throw err
           done()
@@ -174,7 +173,7 @@ describe('/accounts', () => {
     })
 
     after((done) => {
-      db.collection('accounts').drop(function (err, success) {
+      db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
         done()
       })
@@ -251,7 +250,7 @@ describe('/accounts', () => {
     })
 
     after(done => {
-      db.collection('accounts').drop((err, success) => {
+      db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
         done()
       })
@@ -339,7 +338,7 @@ describe('/accounts', () => {
     })
 
     afterEach(done => {
-      db.collection('accounts').drop((err, success) => {
+      db.collection('accounts').remove({}, (err, success) => {
         done()
       })
     })

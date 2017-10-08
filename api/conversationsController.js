@@ -2,7 +2,6 @@ const Conversation = require('./../models/Conversation')
 
 const createConversations = (newAccountId, accounts) => {
   const promises = []
-
   return Conversation.find({}, 'key').then(keys => {
 
     accounts.forEach(({ id: accountId }) => {
