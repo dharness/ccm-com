@@ -12,6 +12,23 @@ const TEST_DB_URL = process.env.MONGO_URL_TEST
 const API_URL = `http://localhost:${TEST_PORT}/api`
 chai.use(chaiHttp)
 
+function _createUsers(numUsers) {
+  const promises = [];
+  for(let i = 0; i < numUsers; i++) {
+    const p = chai
+      .request(API_URL)
+      .post('/account.create')
+      .type('application/json')
+      .send({
+        username: 'newuser_' + i,
+        password: 'password'
+      })
+      .then(res => res.body)
+    promises.push(p);
+  }
+  return Promise.all(promises)
+}
+
 describe('/accounts', () => {
   var db
 
@@ -38,12 +55,15 @@ describe('/accounts', () => {
     })
   })
 
-  describe('account.create', () => {
+  describe.only('account.create', () => {
 
     afterEach((done) => {
-      db.collection('accounts').drop(function (err, success) {
+      db.collection('accounts').drop((err, success) => {
         if (err) throw err
-        done()
+        db.collection('conversations').drop((err, success) => {
+          if (err) throw err
+          done()
+        })
       })
     })
 
@@ -94,6 +114,30 @@ describe('/accounts', () => {
           })
       })
     })
+
+    it('should create conversations with all users when a new account is created', (done) => {
+      _createUsers(2).then(responses => {
+        db.collection('conversations').find({}).toArray((err, docs) => {
+          expect(docs.length).to.equal(1)
+          expect(docs[0].members.length).to.equal(2)
+          done()
+        })
+      })
+    })
+
+    it.only('should create n choose 2 conversations', (done) => {
+      const n = 6;
+      const nChoose2 = 15;
+      _createUsers(n).then(responses => {
+        db.collection('conversations').find({}).toArray((err, docs) => {
+          console.log(docs.map(d => d.members.join('<=>')))
+          expect(docs.length).to.equal(nChoose2)
+          expect(docs[0].members.length).to.equal(2)
+          done()
+        })
+      })
+    })
+
   })
 
   describe('/login', () => {

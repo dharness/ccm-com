@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const conversationSchema = new Schema({
+  key: {
+    type: String,
+    unique: true
+  },
   members: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account'

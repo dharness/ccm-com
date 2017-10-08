@@ -37,10 +37,12 @@ function configureStrategies () {
             if (err) { throw err; }
 
             req.token = jwt.sign(
-              { username},
+              { username },
               jwtConfig.secretKey,
               { expiresIn: jwtConfig.expiresIn }
             )
+
+            req.user = newAccount;
 
             return done(null, newAccount, req)
           })

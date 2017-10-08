@@ -11,6 +11,9 @@ const {
   disconnect: disconnectDb,
 } = require('./services/connections');
 
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+});
 
 messaging.init(server);
 app.use(function(req, res, next) {
