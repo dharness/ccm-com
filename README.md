@@ -79,8 +79,8 @@ It need only contain the `to` and `from` fields that represent genuine users. Fo
 
 ``` javascript
 const messageToSend = {
-  from: 'user1',
-  to: 'user2',
+  from: 'user1_id',
+  to: 'user2_id',
   data: {
     type: 'text',
     body: 'simple text'
