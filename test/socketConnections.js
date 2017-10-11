@@ -45,7 +45,7 @@ describe('socket connections', () => {
   })
 
   after(done => {
-    db.collection('accounts').drop((err, success) => {
+    db.collection('accounts').remove({}, (err, success) => {
       db.close()
       stop().then(_ => done());
     })

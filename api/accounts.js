@@ -1,6 +1,8 @@
 const express = require('express')
 const { passport } = require('./../config/passport')
 const Account = require('./../models/Account')
+const Conversation = require('./../models/Conversation')
+const { createConversations } = require('./conversationsController')
 
 const router = express.Router()
 
@@ -8,7 +10,23 @@ router.post('/account.create', (req, res, next) => {
   passport.authenticate('local-signup', (err, user, info) => {
     if (err) { return res.status(err.status).send(err.message); }
 
-    res.send({ token: req.token })
+    Account.find({}, 'id', (err, accounts) => {
+      createConversations(req.user.id, accounts)
+        .then(docs => {
+          res.send({
+            token: req.token,
+            account: req.user.toClient()
+          })
+        })
+        .catch(errs => {
+          if(errs.code !== 11000) {
+            return res.sendStatus(500)
+          }
+          console.log('Duplicate conversation error', 11000)
+        })
+
+    })
+
   })(req, res, next)
 })
 

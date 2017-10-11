@@ -4,13 +4,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
-  conversationId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Conversation',
+  timestampSent: {
+    type: Date,
+    default: Date.now
+  },
+  key: {
+    type: String,
     required: true
   },
-  timestamp_sent: Date,
-  timestamp_read: Date,
   to: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
@@ -21,8 +22,8 @@ const messageSchema = new Schema({
     ref: 'Account',
     required: true
   },
-  body: {
-    text: String,
+  data: {
+    type: Object,
     required: true
   }
 }, {

@@ -37,10 +37,12 @@ function configureStrategies () {
             if (err) { throw err; }
 
             req.token = jwt.sign(
-              { username},
+              { username, id: newAccount.id },
               jwtConfig.secretKey,
               { expiresIn: jwtConfig.expiresIn }
             )
+
+            req.user = newAccount;
 
             return done(null, newAccount, req)
           })
@@ -50,13 +52,13 @@ function configureStrategies () {
   passport.use('local-login',
     new LocalStrategy({ passReqToCallback: true },
       (req, username, password, done) => {
-        Account.findOne({ username}, (err, account) => {
+        Account.findOne({ username }, (err, account) => {
           if (err) { return done(err); }
 
           if (!account) { return done(null, false, req); }
           if (!account.validPassword(password)) { return done(null, false, req); }
           req.token = jwt.sign(
-            { username},
+            { username, id: account.id },
             jwtConfig.secretKey,
             { expiresIn: jwtConfig.expiresIn }
           )

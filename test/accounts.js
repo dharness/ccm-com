@@ -12,6 +12,23 @@ const TEST_DB_URL = process.env.MONGO_URL_TEST
 const API_URL = `http://localhost:${TEST_PORT}/api`
 chai.use(chaiHttp)
 
+function _createUsers(numUsers) {
+  const promises = [];
+  for(let i = 0; i < numUsers; i++) {
+    const p = chai
+      .request(API_URL)
+      .post('/account.create')
+      .type('application/json')
+      .send({
+        username: 'newuser_' + i,
+        password: 'password'
+      })
+      .then(res => res.body)
+    promises.push(p);
+  }
+  return Promise.all(promises)
+}
+
 describe('/accounts', () => {
   var db
 
@@ -19,13 +36,13 @@ describe('/accounts', () => {
     start(TEST_PORT, TEST_DB_URL).then(() => {
       MongoClient.connect(TEST_DB_URL, (err, _db) => {
         db = _db
-        db.collection('accounts').drop(() => done())
+        db.collection('accounts').remove({}, () => done())
       })
     })
   })
 
   after(done => {
-    db.collection('accounts').drop((err, success) => {
+    db.collection('accounts').remove({}, (err, success) => {
       db.close()
       stop().then(_ => done())
     })
@@ -40,14 +57,17 @@ describe('/accounts', () => {
 
   describe('account.create', () => {
 
-    afterEach((done) => {
-      db.collection('accounts').drop(function (err, success) {
+    afterEach(done => {
+      db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
-        done()
+        db.collection('conversations').remove({}, (err, success) => {
+          if (err) throw err
+          done()
+        })
       })
     })
 
-    it('should create a new account', (done) => {
+    it('should create a new account', done => {
       chai.request(API_URL)
         .post('/account.create')
         .type('application/json')
@@ -62,7 +82,25 @@ describe('/accounts', () => {
           db.collection('accounts').find({}).toArray((err, docs) => {
             expect(docs.length).to.equal(1)
             expect(docs[0].username).to.equal('newuser')
-            expect(docs[0].username).to.equal('newuser')
+            done()
+          })
+        })
+    })
+
+    it('should not create conversations when only a single account is created', done => {
+      chai.request(API_URL)
+        .post('/account.create')
+        .type('application/json')
+        .send({
+          username: 'newuser',
+          password: 'password'
+        })
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body.token).to.be.a('string')
+          db.collection('conversations').find({}).toArray((err, docs) => {
+            expect(docs.length).to.equal(0)
             done()
           })
         })
@@ -94,6 +132,29 @@ describe('/accounts', () => {
           })
       })
     })
+
+    it('should create conversations with all users when a new account is created', (done) => {
+      _createUsers(2).then(responses => {
+        db.collection('conversations').find({}).toArray((err, docs) => {
+          expect(docs.length).to.equal(1)
+          expect(docs[0].members.length).to.equal(2)
+          done()
+        })
+      })
+    })
+
+    it('should create n choose 2 conversations', (done) => {
+      const n = 6;
+      const nChoose2 = 15;
+      _createUsers(n).then(responses => {
+        db.collection('conversations').find({}).toArray((err, docs) => {
+          expect(docs.length).to.equal(nChoose2)
+          expect(docs[0].members.length).to.equal(2)
+          done()
+        })
+      })
+    })
+
   })
 
   describe('/login', () => {
@@ -112,7 +173,7 @@ describe('/accounts', () => {
     })
 
     after((done) => {
-      db.collection('accounts').drop(function (err, success) {
+      db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
         done()
       })
@@ -189,7 +250,7 @@ describe('/accounts', () => {
     })
 
     after(done => {
-      db.collection('accounts').drop((err, success) => {
+      db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
         done()
       })
@@ -277,7 +338,7 @@ describe('/accounts', () => {
     })
 
     afterEach(done => {
-      db.collection('accounts').drop((err, success) => {
+      db.collection('accounts').remove({}, (err, success) => {
         done()
       })
     })
