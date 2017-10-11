@@ -27,7 +27,7 @@ const createConversations = (newAccountId, accounts) => {
   })
 }
 
-const list = (req, res) => {
+const listConversations = (req, res) => {
   const { id } = req.user;
   Conversation.find({ 
     members: id
@@ -41,6 +41,6 @@ const list = (req, res) => {
 }
 
 module.exports = {
-  list,
+  listConversations,
   createConversations
 }

@@ -13,7 +13,10 @@ router.post('/account.create', (req, res, next) => {
     Account.find({}, 'id', (err, accounts) => {
       createConversations(req.user.id, accounts)
         .then(docs => {
-          res.send({ token: req.token })
+          res.send({
+            token: req.token,
+            account: req.user.toClient()
+          })
         })
         .catch(errs => {
           if(errs.code !== 11000) {

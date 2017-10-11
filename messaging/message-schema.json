@@ -1,0 +1,13 @@
+{
+  "title": "Socket Message",
+  "type": "object",
+  "properties": {
+    "to": {
+      "type": "string"
+    },
+    "from": {
+      "type": "string"
+    }
+  },
+  "required": ["to", "from"]
+}
