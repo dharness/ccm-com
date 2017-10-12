@@ -48,7 +48,7 @@ describe('conversations', () => {
     })
   })
 
-  describe('conversations.list', (done) => {
+  describe.only('conversations.list', (done) => {
     afterEach(done => {
       db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
@@ -106,7 +106,7 @@ describe('conversations', () => {
       })
     })
 
-    it('conversations should contain a members field with 2 members', (done) => {
+    it.only('conversations should contain a members field with 2 members', (done) => {
       _createUsers(2).then(responses => {
         chai.request(API_URL)
         .post('/conversations.list')
@@ -115,6 +115,7 @@ describe('conversations', () => {
         .end((err, res) => {
           expect(err).to.be.null
           expect(res).to.have.status(200)
+          console.log(res.body.conversations)
           expect(res.body.conversations).to.be.an('array')
           expect(res.body.conversations.length).to.equal(1)
           expect(res.body.conversations[0].members.length).to.equal(2)

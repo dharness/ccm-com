@@ -1,4 +1,5 @@
 const Conversation = require('./../models/Conversation')
+const { ObjectId } = require('mongoose').Types
 
 const createConversations = (newAccountId, accounts) => {
   const promises = []
@@ -29,13 +30,27 @@ const createConversations = (newAccountId, accounts) => {
 
 const listConversations = (req, res) => {
   const { id } = req.user;
-  Conversation.find({ 
-    members: id
-   }, (err, convos) => {
+  Conversation.aggregate([
+    {
+      $match: { members: ObjectId(id)}
+    },
+    {
+      $lookup: {
+        from: 'messages',
+        localField: 'key',
+        foreignField: 'key',
+        as: 'messages'
+      }
+    }
+  ], (err, convos) => {
     if (err) { return res.send(500); }
     if (!convos) { return res.sendStatus(404); }
     return res.send({
-      conversations: convos.map(convo => convo.toClient())
+      conversations: convos.map(convo => {
+        convo.id = convo._id;
+        delete convo._id;
+        return convo;
+      })
     })
   })
 }
