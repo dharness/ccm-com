@@ -61,14 +61,17 @@ const sendErrors = (ws, errors) => {
 }
 
 const handleMessage = (fromWs, rawData) => {
+  console.log('some message')
   const { errors, message } = validateMessage(rawData)
+
   const toWs = this.connections.get(message.to)
 
   if (errors && fromWs)
     return sendErrors(fromWs, errors)
 
   messageStore.persist(message)
-  toWs.send(JSON.stringify(message))
+  if(toWs)
+    toWs.send(JSON.stringify(message))
 }
 
 module.exports = { init }
