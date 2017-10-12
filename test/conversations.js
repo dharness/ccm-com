@@ -48,7 +48,7 @@ describe('conversations', () => {
     })
   })
 
-  describe.only('conversations.list', (done) => {
+  describe('conversations.list', (done) => {
     afterEach(done => {
       db.collection('accounts').remove({}, (err, success) => {
         if (err) throw err
@@ -106,7 +106,7 @@ describe('conversations', () => {
       })
     })
 
-    it.only('conversations should contain a members field with 2 members', (done) => {
+    it('conversations should contain a members field with 2 members', (done) => {
       _createUsers(2).then(responses => {
         chai.request(API_URL)
         .post('/conversations.list')

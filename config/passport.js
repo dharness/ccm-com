@@ -63,6 +63,8 @@ function configureStrategies () {
             { expiresIn: jwtConfig.expiresIn }
           )
 
+          req.user = account
+
           return done(null, account, req)
         })
       }))
