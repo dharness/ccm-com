@@ -31,7 +31,7 @@ router.post('/account.create', (req, res, next) => {
 })
 
 router.post('/account.login', passport.authenticate('local-login', { session: false }), (req, res) => {
-  res.send({ token: req.token, account: req.user })
+  res.send({ token: req.token, account: req.user.toClient() })
 })
 
 router.post('/account.search', passport.authenticate('jwt-auth', { session: false }), (req, res) => {
