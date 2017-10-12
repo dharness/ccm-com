@@ -52,8 +52,7 @@ describe('socket connections', () => {
   })
 
   it('should connect if a valid JWT is provided', done => {
-    const options = { headers: { token } };
-    const connection = new WebSocket(SOCKET_URL, options);
+    const connection = new WebSocket(`${SOCKET_URL}?token=${token}`);
 
     connection.onopen = (error) => {
       expect(error).not.to.be.null;
@@ -70,8 +69,8 @@ describe('socket connections', () => {
   })
 
   it('should not connect if a valid JWT is not provided', done => {
-    const options = { headers: { token: 'NOT A REAL TOKEN' } };
-    const connection = new WebSocket(SOCKET_URL, options);
+    const token = 'NOT A REAL TOKEN'
+    const connection = new WebSocket(`${SOCKET_URL}?token=${token}`);
     connection.onerror = (error) => {
       expect(error).not.to.be.null;
       done();

@@ -3,10 +3,13 @@ const jwt = require('jsonwebtoken')
 const Ajv = require('ajv');
 const messageSchema = require('./message-schema.json')
 const messageStore = require('./messageStore')
+const { URL } = require('url')
+const queryString = require('query-string');
 
 
 const verifyClient = (info, cb) => {
-  const { token } = info.req.headers
+  const { token } = queryString.parse(info.req.url.replace('/', ''))
+
   if (!token) { return cb(false, 401, 'Unauthorized'); }
 
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
@@ -33,6 +36,7 @@ const init = server => {
 }
 
 const handleConnection = (ws, req) => {
+  ws.upgradeReq = req;
   this.connections.set(req.accoundId, ws);
   ws.on('message', rawData => handleMessage(ws, rawData));
 }
