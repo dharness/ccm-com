@@ -47,7 +47,7 @@ function createAccount ({ username }) {
 
 function connectHelper(token) {
   return new Promise((resolve, reject) => {
-    const client = new WebSocket(SOCKET_URL, { headers: { token: token } });
+    const client = new WebSocket(`${SOCKET_URL}?token=${token}`);
     client.onopen = _ => resolve(client);
     client.onerror = err => reject(err);
   })
